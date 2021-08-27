@@ -27,7 +27,7 @@ Description of input function.
 
 | Input | Function |
 | --- | ---|
-| Umschalt-B | Switch between local or remote control (0=local, 1=remote) |
+| Umschalt-B | Switch between local or remote control (0=local, 1=remote). Locked by the current speed source (B-Gas or L-Gas <4%). |
 | B-Gas | Speed information from the remote control, mapped to PWM-Gas. (Input is a PWM-Signal) |
 | L-Gas | Analog value to transform onto PWM-Gas |
 | L-Bremse | Analog value to transform onto PWM-Bremse |
@@ -50,8 +50,8 @@ Inputs are analog and are utilisation is linear mapped to the current voltage.
 | --- | ---|
 | PWM-Gas | Send speed to motor |
 | PWM-Bremse | Control breaking |
-| PWM-Laut | Analog value to transform onto PWM-Laut |
-| PWM-Spare | Analog value to transform onto PWM-Spare |
+| PWM-Laut | What does this do? Sound? |
+| PWM-Spare | Spare port for future use |
 | Richtung-AVR | Select the travel direction, value change only possible when current Speed source is <4% |
 | Licht1 | Turn on all lights for forward travel |
 | Rück1 | Turn on all lights for reverse travel |
@@ -70,3 +70,4 @@ Inputs are analog and are utilisation is linear mapped to the current voltage.
 ## Open Question
 
 * If Umschalt-B is high (remote mode) do the PWM outputs need to chagne state to input to avoid problems with external voltages?
+* What does PWM-Laut do?
