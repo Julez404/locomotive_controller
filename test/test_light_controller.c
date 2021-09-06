@@ -3,11 +3,6 @@
 #include "mock_travel_controller.h"
 #include "mock_io_mapper.h"
 
-void test_True()
-{
-  TEST_ASSERT_EQUAL(1, 1);
-}
-
 void test_ModeIsOffWhenWhenMainAndAutomaticAreOff()
 {
   IOMapper_GetMainLightState_ExpectAndReturn(IO_STATE_OFF);
@@ -39,7 +34,7 @@ void test_ModeIsManualWhenMainIsOnAndAutomaticIsOff()
   TEST_ASSERT_EQUAL(LightController_GetModuleState(), LIGHT_STATE_MANUAL);
 }
 
-void test_ModeIsManualWhenMainIsOnAndAutomaticIsOn()
+void test_ModeIsAutomaticWhenMainIsOnAndAutomaticIsOn()
 {
   IOMapper_GetMainLightState_ExpectAndReturn(IO_STATE_ON);
   IOMapper_GetAutomaticLightingState_ExpectAndReturn(IO_STATE_ON);
