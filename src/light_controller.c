@@ -22,9 +22,9 @@ void LightController_Update()
 
   case LIGHT_STATE_MANUAL:
     if (IOMapper_GetForwardLightsState())
-      SetLightByDirection(forward);
+      SetLightByDirection(TRAVEL_DIRECTION_FORWARD);
     else
-      SetLightByDirection(backward);
+      SetLightByDirection(TRAVEL_DIRECTION_BACKWARD);
     break;
 
   case LIGHT_STATE_AUTOMATIC:
@@ -40,7 +40,7 @@ lightModuleState_t LightController_GetModuleState()
 
 void SetLightByDirection(travelDirection_t direction)
 {
-  if (direction == forward)
+  if (direction == TRAVEL_DIRECTION_FORWARD)
     SetForwardLight();
   else
     SetBackwardLight();
