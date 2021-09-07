@@ -38,7 +38,7 @@ void test_ModeIsAutomaticWhenMainIsOnAndAutomaticIsOn()
 {
   IOMapper_GetMainLightState_ExpectAndReturn(IO_STATE_ON);
   IOMapper_GetAutomaticLightingState_ExpectAndReturn(IO_STATE_ON);
-  TravelController_GetDirection_IgnoreAndReturn(backward);
+  TravelController_GetDirection_IgnoreAndReturn(TRAVEL_DIRECTION_BACKWARD);
   IOMapper_SetForwardLightState_Ignore();
   IOMapper_SetBackwardLightState_Ignore();
   LightController_Update();
@@ -51,7 +51,7 @@ void test_AutomaticModeCallsTravelDirection()
   IOMapper_GetAutomaticLightingState_ExpectAndReturn(IO_STATE_ON);
   IOMapper_SetForwardLightState_Ignore();
   IOMapper_SetBackwardLightState_Ignore();
-  TravelController_GetDirection_ExpectAndReturn(forward);
+  TravelController_GetDirection_ExpectAndReturn(TRAVEL_DIRECTION_FORWARD);
   LightController_Update();
 }
 
@@ -59,7 +59,7 @@ void test_AutomaticForwardsSetsForwardLight()
 {
   IOMapper_GetMainLightState_ExpectAndReturn(IO_STATE_ON);
   IOMapper_GetAutomaticLightingState_ExpectAndReturn(IO_STATE_ON);
-  TravelController_GetDirection_ExpectAndReturn(forward);
+  TravelController_GetDirection_ExpectAndReturn(TRAVEL_DIRECTION_FORWARD);
   IOMapper_SetForwardLightState_Expect(IO_STATE_ON);
   IOMapper_SetBackwardLightState_Expect(IO_STATE_OFF);
   LightController_Update();
@@ -69,7 +69,7 @@ void test_AutomaticBackwardSetsBackwardLight()
 {
   IOMapper_GetMainLightState_ExpectAndReturn(IO_STATE_ON);
   IOMapper_GetAutomaticLightingState_ExpectAndReturn(IO_STATE_ON);
-  TravelController_GetDirection_ExpectAndReturn(backward);
+  TravelController_GetDirection_ExpectAndReturn(TRAVEL_DIRECTION_BACKWARD);
   IOMapper_SetForwardLightState_Expect(IO_STATE_OFF);
   IOMapper_SetBackwardLightState_Expect(IO_STATE_ON);
   LightController_Update();

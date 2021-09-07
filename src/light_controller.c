@@ -31,6 +31,7 @@ void LightController_Update()
     break;
 
   default:
+    // Case not reachable
     break;
   }
 }
