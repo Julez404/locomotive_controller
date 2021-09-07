@@ -25,19 +25,19 @@ The project uses a **Atmega328p** as it's microcontroller, the code is primarily
 
 Description of input function.
 
-| Input | Function |
-| --- | ---|
-| Umschalt-B | Switch between local or remote control (0=local, 1=remote). Locked by the current speed source (B-Gas or L-Gas <4%). |
-| B-Gas | Speed information from the remote control, mapped to PWM-Gas. (Input is a PWM-Signal) |
-| L-Gas | Analog value to transform onto PWM-Gas |
-| L-Bremse | Analog value to transform onto PWM-Bremse |
-| L-Laut | Analog value to transform onto PWM-Laut |
-| L-Spare | Analog value to transform onto PWM-Spare |
-| Richtung | Select travel direction (0=Forwards, 1=Backwards) |
-| Licht | Main switch to enable lights |
-| Licht-Auto | Select if lights switch automatically (0=Selected by Licht-A1/A2), 1=switch based on travel) |
-| Licht-A1 | Turn on lights in forward direction (Hardware locked with Licht-A2) |
-| Licht-A2 | Turn on lights in reverse direction (Hardware locked with Licht-A1) |
+| Input (PCB) | Input (SW) | Function |
+| --- | --- | --- |
+| Umschalt-B | ControlSource | Switch between local or remote control (0=local, 1=remote). Locked by the current speed source (B-Gas or L-Gas <4%). |
+| B-Gas | TBD | Speed information from the remote control, mapped to PWM-Gas. (Input is a PWM-Signal) |
+| L-Gas | TBD | Analog value to transform onto PWM-Gas |
+| L-Bremse | TBD | Analog value to transform onto PWM-Bremse |
+| L-Laut | TBD | Analog value to transform onto PWM-Laut |
+| L-Spare | TBD | Analog value to transform onto PWM-Spare |
+| Richtung | DirectionSelection | Select travel direction (0=Forwards, 1=Backwards) |
+| Licht | LightsMain | Main switch to enable lights |
+| Licht-Auto | LightsAutomatic | Select if lights switch automatically (0=Selected by Licht-A1/A2), 1=switch based on travel) |
+| Licht-A1 | LightsOn | Turn on lights in forward direction (Hardware locked with Licht-A2) |
+| Licht-A2 | NOT USED | Turn on lights in reverse direction (Hardware locked with Licht-A1) |
 
 #### L-* Input Info
 
@@ -46,15 +46,15 @@ Inputs are analog and are utilisation is linear mapped to the current voltage.
 
 ### Output Functions
 
-| Output | Function |
-| --- | ---|
-| PWM-Gas | Send speed to motor |
-| PWM-Bremse | Control breaking |
-| PWM-Laut | What does this do? Sound? |
-| PWM-Spare | Spare port for future use |
-| Richtung-AVR | Select the travel direction, value change only possible when current Speed source is <4% |
-| Licht1 | Turn on all lights for forward travel |
-| Rück1 | Turn on all lights for reverse travel |
+| Output (PCB) | Output (SW) | Function |
+| --- | ---| ---|
+| PWM-Gas | PWM_Gas | Send speed to motor |
+| PWM-Bremse | PWM_Break | Control breaking |
+| PWM-Laut | PWM_Horn | What does this do? Sound? |
+| PWM-Spare | NOT USED | Spare port for future use |
+| Richtung-AVR | DirectionControl | Select the travel direction, value change only possible when current Speed source is <4% |
+| Licht1 | LightsFront | Turn on all lights for forward travel |
+| Rück1 | LightsRear | Turn on all lights for reverse travel |
 
 #### PWM Output Info
 
