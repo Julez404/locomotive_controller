@@ -69,6 +69,8 @@
 # You will need to have gcov and gcovr both installed to make it work.
 # For more information on these options, see docs in plugins/gcov
 :gcov:
+  :utilities:
+    - gcovr           # Use gcovr to create the specified reports (default).
   :reports:
     - HtmlDetailed
   :gcovr:
@@ -99,4 +101,5 @@
     - stdout_pretty_tests_report
     - module_generator
     - xml_tests_report
+    - gcov
 ...
