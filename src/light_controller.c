@@ -17,8 +17,9 @@ void LightController_Update()
   switch (state)
   {
   case LIGHT_STATE_OFF:
-      TurnOffLights();
+    TurnOffLights();
     break;
+
   case LIGHT_STATE_MANUAL:
     if (IOMapper_GetForwardLightsState())
       SetLightByDirection(forward);
@@ -28,10 +29,6 @@ void LightController_Update()
 
   case LIGHT_STATE_AUTOMATIC:
     SetLightByDirection(TravelController_GetDirection());
-    break;
-
-  default:
-    // Case not reachable
     break;
   }
 }
