@@ -41,10 +41,11 @@ void test_DirectionChangeChangesOutput()
 
 void test_NoDirectionChangeAboveSpeedLimit()
 {
-  uint8_t switchSpeedLimit = 5;
-  TravelController_Init(10, TRAVEL_DIRECTION_BACKWARD);
-  TEST_ASSERT_TRUE(TravelController_SetDirection(TRAVEL_DIRECTION_FORWARD));
-  TEST_ASSERT_EQUAL(TravelController_GetDirection(), TRAVEL_DIRECTION_BACKWARD);
+
+  IOMapper_GetControlSource_IgnoreAndReturn(IO_STATE_OFF);
+  IOMapper_SetDirectionAVR_Expect(IO_STATE_OFF);
+  TravelController_Init(99, TRAVEL_DIRECTION_FORWARD);
+  TravelController_Update();
 }
 
 void test_UpdateRequestsControlSource()
