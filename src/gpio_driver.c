@@ -14,13 +14,20 @@ uint8_t ddr_c;
 
 #define PIN_MAX 31
 
+
+static int GetPortDirectionGpioNumber(uint8_t gpioNumber);
+static int GetPortFromGpioNumber(uint8_t gpioNumber);
+static uint8_t GetPortPinFromGpioNumber(uint8_t gpioNumber);
+static bool IsValidGPIO(uint8_t gpioNumber);
+
+
 /**
  * @brief Sets every Available GPIO to Input without pullup
  * 
  */
 void GPIO_Init()
 {
-  for (uint8_t inputNumer = 0; inputNumer < count; inputNumer++)
+  for (uint8_t inputNumer = 0; inputNumer < PIN_MAX; inputNumer++)
   {
     /* code */
   }
@@ -39,10 +46,10 @@ void GPIO_SetPin(uint8_t gpioNumber, bool state)
 
 void GPIO_ConfigurePin(pinConfig_t pinConfiguration, uint8_t gpioNumber)
 {
-  if (!IsValidGPIO())
+  if (!IsValidGPIO(gpioNumber))
     return;
 
-  int portDirectionRegister = GetPortDirectionGpioNumber();
+  int portDirectionRegister = GetPortDirectionGpioNumber(gpioNumber);
   int port = GetPortFromGpioNumber(gpioNumber);
   int portPin = GetPortPinFromGpioNumber(gpioNumber);
 
@@ -56,20 +63,20 @@ void GPIO_ConfigurePin(pinConfig_t pinConfiguration, uint8_t gpioNumber)
   }
 }
 
-static int GetPortDirectionGpioNumber(gpioNumber)
+static int GetPortDirectionGpioNumber(uint8_t gpioNumber)
 {
 
 }
 
-static int GetPortFromGpioNumber(gpioNumber)
+static int GetPortFromGpioNumber(uint8_t gpioNumber)
 {
 }
 
-static uint8_t GetPortPinFromGpioNumber(gpioNumber)
+static uint8_t GetPortPinFromGpioNumber(uint8_t gpioNumber)
 {
 }
 
-static bool IsValidGPIO(uint8_t)
+static bool IsValidGPIO(uint8_t gpioNumber)
 {
   return true;
 }
