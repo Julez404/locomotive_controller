@@ -35,15 +35,6 @@ void TravelController_Init(uint8_t initialSpeedValue, travelDirection_t initialD
 void TravelController_Update(void);
 
 /**
- * @brief Set the travel direction of the controller.
- * Function will check the current speed to validate if a direction switch is allowed.
- * If the transition was successfull the function returns false.
- * @param direction 
- * @return * brief 
- */
-bool TravelController_SetDirection(travelDirection_t direction);
-
-/**
  * @brief Return the current travel direction
  * 
  * @return travelDirection_t The current travel direction

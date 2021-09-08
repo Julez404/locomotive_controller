@@ -105,16 +105,6 @@ uint8_t TravelController_GetSpeed(void)
   return currentSpeed;
 }
 
-bool TravelController_SetDirection(travelDirection_t directionToSet)
-{
-  if (SpeedIsSaveToSwitch())
-  {
-    currentDirection = directionToSet;
-    return false;
-  }
-  return true;
-}
-
 travelDirection_t TravelController_GetDirection()
 {
   return currentDirection;

@@ -21,11 +21,20 @@ void test_SpeedCanBeSet()
 
 void test_DirectionChangePossible()
 {
-  TravelController_Init(0, TRAVEL_DIRECTION_FORWARD);
-  TEST_ASSERT_FALSE(TravelController_SetDirection(TRAVEL_DIRECTION_BACKWARD));
-  TEST_ASSERT_EQUAL(TravelController_GetDirection(), TRAVEL_DIRECTION_BACKWARD);
-  TEST_ASSERT_FALSE(TravelController_SetDirection(TRAVEL_DIRECTION_FORWARD));
+  uint8_t initSpeed = 2;
+  travelDirection_t initialDirection = TRAVEL_DIRECTION_FORWARD;
+
+  IOMapper_GetControlSource_IgnoreAndReturn(IO_STATE_ON);
+  IOMapper_SetDirectionAVR_Ignore();
+
+  IOMapper_GetDirectionState_ExpectAndReturn(IO_STATE_OFF);
+  TravelController_Init(initSpeed, initialDirection);
+
+  TravelController_Update();
   TEST_ASSERT_EQUAL(TravelController_GetDirection(), TRAVEL_DIRECTION_FORWARD);
+  IOMapper_GetDirectionState_ExpectAndReturn(IO_STATE_ON);
+  TravelController_Update();
+  TEST_ASSERT_EQUAL(TravelController_GetDirection(), TRAVEL_DIRECTION_BACKWARD);
 }
 
 void test_DirectionChangeChangesOutput()
@@ -41,7 +50,6 @@ void test_DirectionChangeChangesOutput()
 
 void test_NoDirectionChangeAboveSpeedLimit()
 {
-
   IOMapper_GetControlSource_IgnoreAndReturn(IO_STATE_OFF);
   IOMapper_SetDirectionAVR_Expect(IO_STATE_OFF);
   TravelController_Init(99, TRAVEL_DIRECTION_FORWARD);
