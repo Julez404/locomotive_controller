@@ -21,7 +21,7 @@ void LightController_Update()
     break;
 
   case LIGHT_STATE_MANUAL:
-    if (IOMapper_GetForwardLightsState())
+    if (IOMapper_GetPinState(LightsOn))
       SetLightByDirection(TRAVEL_DIRECTION_FORWARD);
     else
       SetLightByDirection(TRAVEL_DIRECTION_BACKWARD);
@@ -48,26 +48,26 @@ void SetLightByDirection(travelDirection_t direction)
 
 void SetForwardLight(void)
 {
-  IOMapper_SetForwardLightState(IO_STATE_ON);
-  IOMapper_SetBackwardLightState(IO_STATE_OFF);
+  IOMapper_SetPinState(LightsFront, IO_STATE_ON);
+  IOMapper_SetPinState(LightsRear, IO_STATE_OFF);
 }
 
 void SetBackwardLight(void)
 {
-  IOMapper_SetForwardLightState(IO_STATE_OFF);
-  IOMapper_SetBackwardLightState(IO_STATE_ON);
+  IOMapper_SetPinState(LightsFront, IO_STATE_OFF);
+  IOMapper_SetPinState(LightsRear, IO_STATE_ON);
 }
 
 void TurnOffLights(void)
 {
-  IOMapper_SetForwardLightState(IO_STATE_OFF);
-  IOMapper_SetBackwardLightState(IO_STATE_OFF);
+  IOMapper_SetPinState(LightsFront, IO_STATE_OFF);
+  IOMapper_SetPinState(LightsRear, IO_STATE_OFF);
 }
 
 void ReadStateFromIO(void)
 {
-  if (IOMapper_GetMainLightState())
-    if (IOMapper_GetAutomaticLightingState())
+  if (IOMapper_GetPinState(LightsMain))
+    if (IOMapper_GetPinState(LightsAutomatic))
       state = LIGHT_STATE_AUTOMATIC;
     else
       state = LIGHT_STATE_MANUAL;
