@@ -1,6 +1,6 @@
 #include "sw_conf.h"
-#include "avr/io.h"
 #include "../src/io_mapper.h"
+
 #include <stdbool.h>
 #include "../unity.framework/src/unity.h"
 #include "mock_gpio_driver.h"

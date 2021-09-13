@@ -1,0 +1,17 @@
+
+build-job:
+  stage: build
+  tags:
+    - bash
+  script:
+    - echo "Hello, $GITLAB_USER_LOGIN!"
+
+test:
+  before_script:
+    - docker info
+  stage: test
+  tags:
+  - bash
+  script:
+    - echo "Test ceedling project"
+    - docker run -v $(pwd):/project -i throwtheswitch/madsciencelab:latest ceedling test:all gcov:all
