@@ -1,7 +1,6 @@
 #ifndef TRAVEL_CONTROLLER_H
 #define TRAVEL_CONTROLLER_H
 
-#include <avr/io.h>
 #include <stdbool.h>
 
 typedef enum
