@@ -1,50 +1,53 @@
+// ****************************************************************************
+/** \file travel_controller.c
+ * \brief Control speed This module contains the 
+ */
+//*****************************************************************************
+// Includes
+//*****************************************************************************
 #include "travel_controller.h"
-#include "io_mapper.h"
 
-// Public methodes
+//*****************************************************************************
+// Module Preprocessor Constants
+//*****************************************************************************
+/**
+ * @brief Maximum speed where direction switch is allowed
+ */
+#define MAX_SWITCH_SPEED 4
 
-// Get the current travel direction
-// Set travel direction(forward/backward)
+//*****************************************************************************
+// Module Preprocessor Macros
+//*****************************************************************************
 
-// Get current speed
-// Set Speed(%)
+//*****************************************************************************
+// Module Typedefs
+//*****************************************************************************
 
-// Inputs
-/* 
-Umschalt-B
-Richtung
-B-Gas
-L-Gas
-L-Bremse
-L-
-*/
-
+//*****************************************************************************
+// Module Variable Definitions
+//*****************************************************************************
 static uint8_t currentSpeed;
 static travelDirection_t currentDirection;
 static travelControlSource_t currentControlSource;
+
+//*****************************************************************************
+// Function Prototypes
+//*****************************************************************************
 static void ReadControllerSourceSwitch(void);
 static bool SpeedIsSaveToSwitch(void);
 static void ReadDirectionSwitch(void);
 static void SetDirectionOutput(void);
 
-/**
- * @brief Maximum speed where direction switch is allowed
- */
-static const uint8_t directionSwitchSpeedLimit = 4;
-
+//*****************************************************************************
+// Function Definitions
+//*****************************************************************************
 void TravelController_Init(uint8_t initialSpeedValue, travelDirection_t initialDirection)
 {
-  // Protection ???
-  // No Output if input was not once below Init Value?
-
   currentDirection = initialDirection;
   currentSpeed = initialSpeedValue;
 }
 
-/**
- * @brief Update function, called every x ms.
- * 
- */
+
 void TravelController_Update(void)
 {
   // Read input
@@ -52,6 +55,7 @@ void TravelController_Update(void)
   ReadDirectionSwitch();
 
   // Validate inputs if nessesary
+
 
   // Output information
   SetDirectionOutput();
@@ -61,7 +65,7 @@ static void ReadControllerSourceSwitch(void)
 {
   if (SpeedIsSaveToSwitch())
   {
-    if (IOMapper_GetControlSource() == IO_STATE_ON)
+    if (IOMapper_GetPinState(ControlSource) == IO_STATE_ON)
       currentControlSource = TRAVEL_CONTROL_SOURCE_REMOTE;
     else
       currentControlSource = TRAVEL_CONTROL_SOURCE_LOCAL;
@@ -71,16 +75,17 @@ static void ReadControllerSourceSwitch(void)
 static void SetDirectionOutput()
 {
   if (currentDirection == TRAVEL_DIRECTION_FORWARD)
-    IOMapper_SetDirectionAVR(IO_STATE_OFF);
+    IOMapper_SetPinState(DirectionControl, IO_STATE_OFF);
   else
-    IOMapper_SetDirectionAVR(IO_STATE_ON);
+    IOMapper_SetPinState(DirectionControl, IO_STATE_ON);
 }
 
 static void ReadDirectionSwitch()
 {
   if (SpeedIsSaveToSwitch())
   {
-    if (IOMapper_GetDirectionState() == IO_STATE_ON)
+    io_state_t currentState = IOMapper_GetPinState(DirectionSelection);
+    if (currentState == IO_STATE_ON)
       currentDirection = TRAVEL_DIRECTION_BACKWARD;
     else
       currentDirection = TRAVEL_DIRECTION_FORWARD;
@@ -89,7 +94,7 @@ static void ReadDirectionSwitch()
 
 static bool SpeedIsSaveToSwitch()
 {
-  if (currentSpeed < directionSwitchSpeedLimit)
+  if (currentSpeed < MAX_SWITCH_SPEED)
     return true;
   else
     return false;
