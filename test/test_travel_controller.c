@@ -1,6 +1,7 @@
 #include "../unity.framework/src/unity.h"
 #include "../src/travel_controller.h"
 #include "mock_io_mapper.h"
+#include <stdio.h>
 
 void test_InitValuesGetSet()
 {
@@ -19,50 +20,52 @@ void test_SpeedCanBeSet()
   TEST_ASSERT_EQUAL(TravelController_GetSpeed(), speedToCheck);
 }
 
-void test_DirectionChangePossible()
+void test_DirectionChangePossibleWhenSpeedIsBelowLimit()
 {
+  // Setup
   uint8_t initSpeed = 2;
   travelDirection_t initialDirection = TRAVEL_DIRECTION_FORWARD;
 
-  IOMapper_GetControlSource_IgnoreAndReturn(IO_STATE_ON);
-  IOMapper_SetDirectionAVR_Ignore();
-
-  IOMapper_GetDirectionState_ExpectAndReturn(IO_STATE_OFF);
+  //IOMapper_SetPinState_Ignore();
   TravelController_Init(initSpeed, initialDirection);
 
+  // Check Forward direction
+  IOMapper_GetPinState_ExpectAndReturn(ControlSource, IO_STATE_OFF);
+  IOMapper_GetPinState_ExpectAndReturn(DirectionSelection, IO_STATE_OFF);
+  IOMapper_SetPinState_Expect(DirectionControl, IO_STATE_OFF);
   TravelController_Update();
-  TEST_ASSERT_EQUAL(TravelController_GetDirection(), TRAVEL_DIRECTION_FORWARD);
-  IOMapper_GetDirectionState_ExpectAndReturn(IO_STATE_ON);
+  TEST_ASSERT_EQUAL(TRAVEL_DIRECTION_FORWARD, TravelController_GetDirection());
+
+  // Check Backward direction
+  IOMapper_GetPinState_ExpectAndReturn(ControlSource, IO_STATE_OFF);
+  IOMapper_GetPinState_ExpectAndReturn(DirectionSelection, IO_STATE_ON);
+  IOMapper_SetPinState_Expect(DirectionControl, IO_STATE_ON);
   TravelController_Update();
-  TEST_ASSERT_EQUAL(TravelController_GetDirection(), TRAVEL_DIRECTION_BACKWARD);
+  TEST_ASSERT_EQUAL(TRAVEL_DIRECTION_BACKWARD, TravelController_GetDirection());
 }
 
 void test_DirectionChangeChangesOutput()
 {
-  IOMapper_GetControlSource_IgnoreAndReturn(IO_STATE_OFF);
-  IOMapper_GetDirectionState_ExpectAndReturn(IO_STATE_OFF);
-  IOMapper_SetDirectionAVR_Expect(IO_STATE_OFF);
+  uint8_t initSpeed = 2;
+  travelDirection_t initialDirection = TRAVEL_DIRECTION_FORWARD;
+
+  TravelController_Init(initSpeed, initialDirection);
+
+  IOMapper_GetPinState_ExpectAndReturn(ControlSource, IO_STATE_OFF);
+  IOMapper_GetPinState_ExpectAndReturn(DirectionSelection, IO_STATE_OFF);
+  IOMapper_SetPinState_Expect(DirectionControl, IO_STATE_OFF);
   TravelController_Update();
-  IOMapper_GetDirectionState_ExpectAndReturn(IO_STATE_ON);
-  IOMapper_SetDirectionAVR_Expect(IO_STATE_ON);
+
+  IOMapper_GetPinState_ExpectAndReturn(ControlSource, IO_STATE_OFF);
+  IOMapper_GetPinState_ExpectAndReturn(DirectionSelection, IO_STATE_ON);
+  IOMapper_SetPinState_Expect(DirectionControl, IO_STATE_ON);
   TravelController_Update();
 }
 
 void test_NoDirectionChangeAboveSpeedLimit()
 {
   IOMapper_GetControlSource_IgnoreAndReturn(IO_STATE_OFF);
-  IOMapper_SetDirectionAVR_Expect(IO_STATE_OFF);
+  IOMapper_SetPinState_Expect(DirectionControl, IO_STATE_OFF);
   TravelController_Init(99, TRAVEL_DIRECTION_FORWARD);
-  TravelController_Update();
-}
-
-void test_UpdateRequestsControlSource()
-{
-  IOMapper_SetDirectionAVR_Ignore();
-  IOMapper_GetDirectionState_IgnoreAndReturn(IO_STATE_ON);
-  TravelController_SetSpeed(1);
-  IOMapper_GetControlSource_ExpectAndReturn(IO_STATE_ON);
-  TravelController_Update();
-  IOMapper_GetControlSource_ExpectAndReturn(IO_STATE_OFF);
   TravelController_Update();
 }
