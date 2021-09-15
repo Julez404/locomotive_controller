@@ -27,7 +27,7 @@ Description of input function.
 
 | Input (PCB) | Input (SW) | Function |
 | --- | --- | --- |
-| Umschalt-B | ControlSource | Switch between local or remote control (0=local, 1=remote). Locked by the current speed source (B-Gas or L-Gas <4%). |
+| Umschalt-B | ControlSource | Switch between local or remote control (0=remote, 1=local). Locked by the current speed source (B-Gas or L-Gas <4%). |
 | B-Gas | TBD | Speed information from the remote control, mapped to PWM-Gas. (Input is a PWM-Signal) |
 | L-Gas | TBD | Analog value to transform onto PWM-Gas |
 | L-Bremse | TBD | Analog value to transform onto PWM-Bremse |
