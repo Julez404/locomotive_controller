@@ -37,6 +37,7 @@ static void ReadControllerSourceSwitch(void);
 static bool SpeedIsSaveToSwitch(void);
 static void ReadDirectionSwitch(void);
 static void SetDirectionOutput(void);
+static void ReadSpeedInformation(void);
 
 //*****************************************************************************
 // Function Definitions
@@ -47,18 +48,32 @@ void TravelController_Init(uint8_t initialSpeedValue, travelDirection_t initialD
   currentSpeed = initialSpeedValue;
 }
 
-
 void TravelController_Update(void)
 {
   // Read input
   ReadControllerSourceSwitch();
   ReadDirectionSwitch();
+  ReadSpeedInformation();
 
   // Validate inputs if nessesary
 
-
   // Output information
   SetDirectionOutput();
+}
+
+void TravelController_SetSpeed(uint8_t speedPercentage)
+{
+  currentSpeed = speedPercentage;
+}
+
+uint8_t TravelController_GetSpeed(void)
+{
+  return currentSpeed;
+}
+
+travelDirection_t TravelController_GetDirection()
+{
+  return currentDirection;
 }
 
 static void ReadControllerSourceSwitch(void)
@@ -66,9 +81,9 @@ static void ReadControllerSourceSwitch(void)
   if (SpeedIsSaveToSwitch())
   {
     if (IOMapper_GetPinState(ControlSource) == IO_STATE_ON)
-      currentControlSource = TRAVEL_CONTROL_SOURCE_REMOTE;
-    else
       currentControlSource = TRAVEL_CONTROL_SOURCE_LOCAL;
+    else
+      currentControlSource = TRAVEL_CONTROL_SOURCE_REMOTE;
   }
 }
 
@@ -100,17 +115,12 @@ static bool SpeedIsSaveToSwitch()
     return false;
 }
 
-void TravelController_SetSpeed(uint8_t speedPercentage)
+static void ReadSpeedInformation(void)
 {
-  currentSpeed = speedPercentage;
-}
-
-uint8_t TravelController_GetSpeed(void)
-{
-  return currentSpeed;
-}
-
-travelDirection_t TravelController_GetDirection()
-{
-  return currentDirection;
+  /*
+  if(currentControlSource == TRAVEL_CONTROL_SOURCE_LOCAL)
+    // ReadFromADC
+  else
+    // ReadFromPWM
+  */
 }
