@@ -64,10 +64,11 @@ Inputs are analog and are utilisation is linear mapped to the current voltage.
 
 ## Additional Notes
 
-* In remote mode (Umschalt-B=1) L-Bremse, L-Laut, L-Spare and the corrosponding PWM Outputs are not used.
+* In remote mode (Umschalt-B=0) L-Bremse, L-Laut, L-Spare and the corrosponding PWM Outputs are not used.
 * Change in direction is locked by the current speed source (B-GAS or L-Gas). Change will only take effect when Speed os below 4% utilization.
 
 ## Open Question
 
-* If Umschalt-B is high (remote mode) do the PWM outputs need to change state to *input* to avoid problems with external voltages?
+* If Umschalt-B is low (remote mode) do the PWM outputs need to change state to *input* to avoid problems with external voltages?
+  > No, they are seperated by Relais.
 * What does PWM-Laut do?

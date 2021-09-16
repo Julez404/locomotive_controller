@@ -69,3 +69,11 @@ void test_NoDirectionChangeAboveSpeedLimit()
   TravelController_Init(99, TRAVEL_DIRECTION_FORWARD);
   TravelController_Update();
 }
+
+/*
+void test_SpeedInformationSourceChangesWithControlSource()
+{
+  // Check if PWM or Analog module is called to get the corrospondig Speed value.
+  TEST_FAIL_MESSAGE("Test needs to be implemented!");
+}
+*/
