@@ -24,3 +24,16 @@ test:
     reports:
       cobertura: build/artifacts/gcov/report_cobertura.xml
       junit: build/artifacts/test/report_junit.xml
+
+pages:
+  stage: deploy
+  dependencies:
+    - test
+  script:
+    - cp build/artifacts/gcov/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - dev
