@@ -1,4 +1,3 @@
-
 build:
   stage: build
   tags:
@@ -11,7 +10,7 @@ test:
     - docker info
   stage: test
   tags:
-  - bash
+    - bash
   script:
     - echo "Test ceedling project"
     - docker run -v $(pwd):/project -i throwtheswitch/madsciencelab:latest ceedling test:all gcov:all utils:gcov
