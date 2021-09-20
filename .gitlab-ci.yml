@@ -32,7 +32,7 @@ pages:
   dependencies:
     - test
   script:
-    - cp build/artifacts/gcov/ public/
+    - cp -r build/artifacts/gcov/ public/
   artifacts:
     paths:
       - public
