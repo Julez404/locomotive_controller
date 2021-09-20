@@ -76,6 +76,7 @@
     - HtmlDetailed
     - cobertura
   :gcovr:
+    :html_artifact_filename: index.html
     :cobertura_artifact_filename: report_cobertura.xml
 #    :cobertura_pretty: true
 
