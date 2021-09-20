@@ -26,6 +26,8 @@ test:
       junit: build/artifacts/test/report_junit.xml
 
 pages:
+  tags:
+    - bash
   stage: deploy
   dependencies:
     - test
