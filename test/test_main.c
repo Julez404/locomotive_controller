@@ -1,7 +1,6 @@
 #include "../unity.framework/src/unity.h"
-#include "../src/main.c"
 
-void test_returnTrueReturnsTrue()
+void test_IsTure()
 {
-	TEST_ASSERT_EQUAL(true, returnTrue());
+	TEST_ASSERT_EQUAL(1, 1);
 }
