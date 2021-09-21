@@ -146,7 +146,12 @@ void GPIO_Init(GPIO_Port_t *portB_addr, GPIO_Port_t *portC_addr, GPIO_Port_t *po
 
 bool GPIO_GetPin(uint8_t gpioNumber)
 {
-  return (bool)GPIO_Ports[GetPortFromPin(gpioNumber)]->input & (1 << GetPortPinFromPin(gpioNumber));
+  int8_t port = GetPortFromPin(gpioNumber);
+  int8_t pin = GetPortPinFromPin(gpioNumber);
+
+  bool test = false;
+
+  return (bool)(GPIO_Ports[port]->input & (1 << pin));
 }
 
 void GPIO_SetPin(uint8_t gpioNumber, bool state)
