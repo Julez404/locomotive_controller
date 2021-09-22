@@ -43,9 +43,36 @@ void test_OutOffBouncePinHasNoEffect()
     config.pullUpActive = false;
     GPIO_ConfigurePin(40, config);
     GPIO_ConfigurePin(35, config);
+    GPIO_ConfigurePin(-1, config);
+
+    GPIO_GetPin(40);
+    GPIO_GetPin(35);
+    GPIO_GetPin(-1);
+    GPIO_SetPin(40, false);
+    GPIO_SetPin(35, false);
+    GPIO_SetPin(-1, false);
+
+    TEST_ASSERT_EQUAL(0b00000000, portB.dataDirection);
+    TEST_ASSERT_EQUAL(0b11111111, portB.output);
+    TEST_ASSERT_EQUAL(0b00000000, portC.dataDirection);
+    TEST_ASSERT_EQUAL(0b11111111, portC.output);
+    TEST_ASSERT_EQUAL(0b00000000, portD.dataDirection);
+    TEST_ASSERT_EQUAL(0b11111111, portD.output);
+}
+
+void test_InvalidPinHasNoEffect()
+{
+    // 16 == PORTB,4
+    pinConfig_t config;
+    config.pintype = PINTYPE_OUTPUT;
+    config.pullUpActive = false;
     GPIO_ConfigurePin(20, config);
     GPIO_ConfigurePin(6, config);
-    GPIO_ConfigurePin(-1, config);
+
+    GPIO_GetPin(20);
+    GPIO_GetPin(6);
+    GPIO_SetPin(20, false);
+    GPIO_SetPin(6, false);
 
     TEST_ASSERT_EQUAL(0b00000000, portB.dataDirection);
     TEST_ASSERT_EQUAL(0b11111111, portB.output);
