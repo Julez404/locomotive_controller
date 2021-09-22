@@ -62,10 +62,7 @@ uint8_t GetNextActiveChannel(uint8_t channel);
 //*****************************************************************************
 void ADC_Init(ADC_Analog_t *analogHardware)
 {
-  if(analogHardware == NULL)
-    Analog = (ADC_Analog_t *)(0x78);
-  else
-    Analog = analogHardware;
+  Analog = analogHardware;
 
   Analog->referenceVoltage = ADC_REFERENCE_AVCC;
   Analog->interruptEnable = false;
