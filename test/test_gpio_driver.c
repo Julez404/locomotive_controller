@@ -42,6 +42,9 @@ void test_OutOffBouncePinHasNoEffect()
     config.pintype = PINTYPE_OUTPUT;
     config.pullUpActive = false;
     GPIO_ConfigurePin(40, config);
+    GPIO_ConfigurePin(35, config);
+    GPIO_ConfigurePin(20, config);
+    GPIO_ConfigurePin(6, config);
     GPIO_ConfigurePin(-1, config);
 
     TEST_ASSERT_EQUAL(0b00000000, portB.dataDirection);
@@ -63,7 +66,27 @@ void test_PullUpCanBeDeactivated()
     TEST_ASSERT_EQUAL(0b11101111, portD.output);
 }
 
-void test_SetPinSetsOutputData()
+void test_PullUpCanBeActivated()
+{
+    // Disable PullUp first
+    pinConfig_t config;
+    config.pintype = PINTYPE_INPUT;
+    config.pullUpActive = false;
+    GPIO_ConfigurePin(2, config);
+
+    TEST_ASSERT_EQUAL(0b00000000, portD.dataDirection);
+    TEST_ASSERT_EQUAL(0b11101111, portD.output);
+
+    //Enable it
+    config.pintype = PINTYPE_INPUT;
+    config.pullUpActive = true;
+    GPIO_ConfigurePin(2, config);
+
+    TEST_ASSERT_EQUAL(0b00000000, portD.dataDirection);
+    TEST_ASSERT_EQUAL(0b11111111, portD.output);
+}
+
+void test_SetPinSetsOutput()
 {
     pinConfig_t config;
     config.pintype = PINTYPE_OUTPUT;
@@ -82,6 +105,27 @@ void test_SetPinSetsOutputData()
     GPIO_SetPin(1, 1);
 
     TEST_ASSERT_EQUAL(0b00001000, portD.output);
+}
+
+void test_SetPinClearsOutput()
+{
+    pinConfig_t config;
+    config.pintype = PINTYPE_OUTPUT;
+    config.pullUpActive = false;
+    GPIO_ConfigurePin(1, config);
+    GPIO_ConfigurePin(2, config);
+    GPIO_ConfigurePin(9, config);
+    GPIO_ConfigurePin(10, config);
+    GPIO_ConfigurePin(11, config);
+    GPIO_ConfigurePin(30, config);
+    GPIO_ConfigurePin(31, config);
+    GPIO_ConfigurePin(32, config);
+
+    TEST_ASSERT_EQUAL(0xFF, portD.dataDirection);
+
+    GPIO_SetPin(1, 0);
+
+    TEST_ASSERT_EQUAL(0b00000000, portD.output);
 }
 
 void test_GetPinReturnsInputValue()

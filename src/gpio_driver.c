@@ -41,96 +41,61 @@ enum Pins
 //*****************************************************************************
 // Module Typedefs
 //*****************************************************************************
+typedef struct GPIO_PinInfo
+{
+  uint8_t port;
+  uint8_t pin;
+  bool validGPIO;
+} GPIO_PinInfo_t;
 
 //*****************************************************************************
 // Module Variable Definitions
 //*****************************************************************************
 volatile GPIO_Port_t *GPIO_Ports[PORT_MAX];
-static int8_t PinToPort[PIN_MAX] =
+static GPIO_PinInfo_t gpioPinInfoStore[PIN_MAX] =
     {
-        INVALID_VALUE, // 0
-        PORTD,         // 1
-        PORTD,         // 2
-        INVALID_VALUE, // 3
-        INVALID_VALUE, // 4
-        INVALID_VALUE, // 5
-        INVALID_VALUE, // 6
-        PORTB,         // 7
-        PORTB,         // 8
-        PORTD,         // 9
-        PORTD,         // 10
-        PORTD,         // 11
-        PORTB,         // 12
-        PORTB,         // 13
-        PORTB,         // 14
-        PORTB,         // 15
-        PORTB,         // 16
-        PORTB,         // 17
-        INVALID_VALUE, // 18
-        INVALID_VALUE, // 19
-        INVALID_VALUE, // 20
-        INVALID_VALUE, // 21
-        INVALID_VALUE, // 22
-        PORTC,         // 23
-        PORTC,         // 24
-        PORTC,         // 25
-        PORTC,         // 26
-        PORTC,         // 27
-        PORTC,         // 28
-        PORTC,         // 29
-        PORTD,         // 30
-        PORTD,         // 31
-        PORTD,         // 32
-        INVALID_VALUE, // 33
-        INVALID_VALUE, // 34
-};
-
-static int8_t PinToPortPin[PIN_MAX] =
-    {
-        INVALID_VALUE, // 0
-        PIN3,          // 1
-        PIN4,          // 2
-        INVALID_VALUE, // 3
-        INVALID_VALUE, // 4
-        INVALID_VALUE, // 5
-        INVALID_VALUE, // 6
-        PIN6,          // 7
-        PIN7,          // 8
-        PIN5,          // 9
-        PIN6,          // 10
-        PIN7,          // 11
-        PIN0,          // 12
-        PIN1,          // 13
-        PIN2,          // 14
-        PIN3,          // 15
-        PIN4,          // 16
-        PIN5,          // 17
-        INVALID_VALUE, // 18
-        INVALID_VALUE, // 19
-        INVALID_VALUE, // 20
-        INVALID_VALUE, // 21
-        INVALID_VALUE, // 22
-        PIN0,          // 23
-        PIN1,          // 24
-        PIN2,          // 25
-        PIN3,          // 26
-        PIN4,          // 27
-        PIN5,          // 28
-        PIN6,          // 29
-        PIN0,          // 30
-        PIN1,          // 31
-        PIN2,          // 32
-        INVALID_VALUE, // 33
-        INVALID_VALUE, // 34
+        {0, 0, false},       // 0
+        {PORTD, PIN3, true}, // 1
+        {PORTD, PIN4, true}, // 2
+        {0, 0, false},       // 3
+        {0, 0, false},       // 4
+        {0, 0, false},       // 5
+        {0, 0, false},       // 6
+        {PORTB, PIN6, true}, // 7
+        {PORTB, PIN7, true}, // 8
+        {PORTD, PIN5, true}, // 9
+        {PORTD, PIN6, true}, // 10
+        {PORTD, PIN7, true}, // 11
+        {PORTB, PIN0, true}, // 12
+        {PORTB, PIN1, true}, // 13
+        {PORTB, PIN2, true}, // 14
+        {PORTB, PIN3, true}, // 15
+        {PORTB, PIN4, true}, // 16
+        {PORTB, PIN5, true}, // 17
+        {0, 0, false},       // 18
+        {0, 0, false},       // 19
+        {0, 0, false},       // 20
+        {0, 0, false},       // 21
+        {0, 0, false},       // 22
+        {PORTC, PIN0, true}, // 23
+        {PORTC, PIN1, true}, // 24
+        {PORTC, PIN2, true}, // 25
+        {PORTC, PIN3, true}, // 26
+        {PORTC, PIN4, true}, // 27
+        {PORTC, PIN5, true}, // 28
+        {PORTC, PIN6, true}, // 29
+        {PORTD, PIN0, true}, // 30
+        {PORTD, PIN1, true}, // 31
+        {PORTD, PIN2, true}, // 32
+        {0, 0, false},       // 33
+        {0, 0, false},       // 34
 };
 
 //*****************************************************************************
 // Function Prototypes
 //*****************************************************************************
-static int8_t GetPortFromPin(uint8_t pin);
-static int8_t GetPortPinFromPin(uint8_t pin);
 static void SetPortsToDefaultConfig();
-static bool PinValid(uint8_t pin);
+static bool PinOutOfBounce(uint8_t pin);
 
 //*****************************************************************************
 // Function Definitions
@@ -146,77 +111,68 @@ void GPIO_Init(GPIO_Port_t *portB_addr, GPIO_Port_t *portC_addr, GPIO_Port_t *po
 
 bool GPIO_GetPin(uint8_t gpioNumber)
 {
-  int8_t port = GetPortFromPin(gpioNumber);
-  int8_t pin = GetPortPinFromPin(gpioNumber);
+  if (PinOutOfBounce(gpioNumber))
+    return false;
 
-  bool test = false;
+  GPIO_PinInfo_t gpioPin = gpioPinInfoStore[gpioNumber];
 
-  return (bool)(GPIO_Ports[port]->input & (1 << pin));
+  if (!gpioPin.validGPIO)
+    return false;
+
+  return (bool)(GPIO_Ports[gpioPin.port]->input & (1 << gpioPin.pin));
 }
 
 void GPIO_SetPin(uint8_t gpioNumber, bool state)
 {
-  int port = GetPortFromPin(gpioNumber);
-  int portPin = GetPortPinFromPin(gpioNumber);
+  if (PinOutOfBounce(gpioNumber))
+    return;
 
-  if ((port == -1) || (portPin == -1))
+  GPIO_PinInfo_t gpioPin = gpioPinInfoStore[gpioNumber];
+
+  if (!gpioPin.validGPIO)
     return;
 
   if (state)
-    GPIO_Ports[port]->output |= (1 << portPin);
+    GPIO_Ports[gpioPin.port]->output |= (1 << gpioPin.pin);
   else
-    GPIO_Ports[port]->output &= ~(1 << portPin);
+    GPIO_Ports[gpioPin.port]->output &= ~(1 << gpioPin.pin);
 }
 
-void GPIO_ConfigurePin(uint8_t gpioPin, pinConfig_t config)
+void GPIO_ConfigurePin(uint8_t pinNumber, pinConfig_t config)
 {
-  int port = GetPortFromPin(gpioPin);
-  int portPin = GetPortPinFromPin(gpioPin);
+  if (PinOutOfBounce(pinNumber))
+    return;
 
-  if ((port == -1) || (portPin == -1))
+  GPIO_PinInfo_t gpioPin = gpioPinInfoStore[pinNumber];
+
+  if (!gpioPin.validGPIO)
     return;
 
   if (config.pintype == PINTYPE_INPUT)
   {
-    GPIO_Ports[port]->dataDirection &= ~(1 << portPin);
+    GPIO_Ports[gpioPin.port]->dataDirection &= ~(1 << gpioPin.pin);
     if (config.pullUpActive)
     {
-      GPIO_Ports[port]->output |= (1 << portPin);
+      GPIO_Ports[gpioPin.port]->output |= (1 << gpioPin.pin);
     }
     else
     {
-      GPIO_Ports[port]->output &= ~(1 << portPin);
+      GPIO_Ports[gpioPin.port]->output &= ~(1 << gpioPin.pin);
     }
   }
   else
   {
-    GPIO_Ports[port]->dataDirection |= (1 << portPin);
-    GPIO_Ports[port]->output &= ~(1 << portPin);
+    GPIO_Ports[gpioPin.port]->dataDirection |= (1 << gpioPin.pin);
+    GPIO_Ports[gpioPin.port]->output &= ~(1 << gpioPin.pin);
   }
 }
 
-static int8_t GetPortPinFromPin(uint8_t pin)
-{
-  if (PinValid(pin))
-    return PinToPortPin[pin];
-  else
-    return INVALID_VALUE;
-}
-
-static int8_t GetPortFromPin(uint8_t pin)
-{
-  if (PinValid(pin))
-    return PinToPort[pin];
-  else
-    return INVALID_VALUE;
-}
-
-static bool PinValid(uint8_t pin)
+static bool PinOutOfBounce(uint8_t pin)
 {
   if (pin >= PIN_MAX)
-    return false;
-  else
     return true;
+  else
+    return false;
 }
 
 static void SetPortsToDefaultConfig()
