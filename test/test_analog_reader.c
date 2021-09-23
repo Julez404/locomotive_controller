@@ -13,7 +13,7 @@ void test_InitInitializesAdcDriver()
   ANALOG_READER_Init();
 }
 
-void test_ValueRequestValueOnADCDriver()
+void test_ValueRequestIsRelayedToDriver()
 {
   ADC_Init_Ignore();
   ADC_ActivateChannel_Ignore();
@@ -23,11 +23,11 @@ void test_ValueRequestValueOnADCDriver()
   TEST_ASSERT_EQUAL(50, reading);
 }
 
-void test_InvalidPinRequestReturn0()
+void test_InvalidPinRequestReturnError()
 {
   ADC_Init_Ignore();
   ADC_ActivateChannel_Ignore();
 
-  uint8_t reading = ANALOG_DRIVER_GetAnalogValue(0);
-  TEST_ASSERT_EQUAL(0, reading);
+  int8_t reading = ANALOG_DRIVER_GetAnalogValue(0);
+  TEST_ASSERT_EQUAL(ANALOG_READER_INVALID_CHANNEL_ERROR, reading);
 }

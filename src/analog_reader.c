@@ -9,8 +9,8 @@
 //*****************************************************************************
 // Module Preprocessor Constants
 //*****************************************************************************
-#define GPIO_WITHOUT_ADC_CHANNEL 255
 #define ACTIVE_CHANNELS 4
+#define INVALID_CHANNEL -1
 
 //*****************************************************************************
 // Module Preprocessor Macros
@@ -23,13 +23,57 @@
 //*****************************************************************************
 // Module Variable Definitions
 //*****************************************************************************
-uint8_t channeltToActivate[ACTIVE_CHANNELS] =
+/**
+ * @brief Channels to activate during initialisation
+ * 
+ */
+uint8_t activeChannels[ACTIVE_CHANNELS] =
     {Gas_Input, Break_Input, Laut_Input, Spare_Input};
+
+/**
+ * @brief Mapping for GPIO Pin Numbers to corrosponding ADC channels.
+ * 
+ */
+static int8_t PinToAdc[LastGPIOPin] =
+    {
+        INVALID_CHANNEL, // 0
+        INVALID_CHANNEL, // 1
+        INVALID_CHANNEL, // 2
+        INVALID_CHANNEL, // 3
+        INVALID_CHANNEL, // 4
+        INVALID_CHANNEL, // 5
+        INVALID_CHANNEL, // 6
+        INVALID_CHANNEL, // 7
+        INVALID_CHANNEL, // 8
+        INVALID_CHANNEL, // 9
+        INVALID_CHANNEL, // 10
+        INVALID_CHANNEL, // 11
+        INVALID_CHANNEL, // 12
+        INVALID_CHANNEL, // 13
+        INVALID_CHANNEL, // 14
+        INVALID_CHANNEL, // 15
+        INVALID_CHANNEL, // 16
+        INVALID_CHANNEL, // 17
+        INVALID_CHANNEL, // 18
+        6,  // 19
+        INVALID_CHANNEL, // 20
+        INVALID_CHANNEL, // 21
+        7,  // 22
+        0,  // 23
+        1,  // 24
+        2,  // 25
+        3,  // 26
+        4,  // 27
+        5,  // 28
+        INVALID_CHANNEL, // 29
+        INVALID_CHANNEL, // 30
+        INVALID_CHANNEL  // 31
+};
 
 //*****************************************************************************
 // Function Prototypes
 //*****************************************************************************
-uint8_t PinToAdcChannel(GPIO_PinAssignment_t gpio_pin);
+int8_t PinToAdcChannel(GPIO_PinAssignment_t gpio_pin);
 
 //*****************************************************************************
 // Function Definitions
@@ -40,40 +84,25 @@ void ANALOG_READER_Init()
 
   for (int i = 0; i < ACTIVE_CHANNELS; i++)
   {
-    uint8_t channel = PinToAdcChannel(channeltToActivate[i]);
-    ADC_ActivateChannel(channel);
+    int8_t channel = PinToAdcChannel(activeChannels[i]);
+    if (channel != INVALID_CHANNEL)
+      ADC_ActivateChannel(channel);
   }
 }
 
-uint8_t ANALOG_DRIVER_GetAnalogValue(GPIO_PinAssignment_t gpio_pin)
+int8_t ANALOG_DRIVER_GetAnalogValue(GPIO_PinAssignment_t gpio_pin)
 {
-  uint8_t channelToRead = PinToAdcChannel(gpio_pin);
-  if (channelToRead == GPIO_WITHOUT_ADC_CHANNEL)
-    return 0;
-  return (uint8_t)ADC_GetChannelReading(channelToRead);
+  int8_t channelToRead = PinToAdcChannel(gpio_pin);
+  if (channelToRead == INVALID_CHANNEL)
+    return ANALOG_READER_INVALID_CHANNEL_ERROR;
+
+  return ADC_GetChannelReading(channelToRead);
 }
 
-uint8_t PinToAdcChannel(GPIO_PinAssignment_t gpio_pin)
+int8_t PinToAdcChannel(GPIO_PinAssignment_t gpio_pin)
 {
-  switch (gpio_pin)
-  {
-  case 23:
-    return 0;
-  case 24:
-    return 1;
-  case 25:
-    return 2;
-  case 26:
-    return 3;
-  case 27:
-    return 4;
-  case 28:
-    return 5;
-  case 19:
-    return 6;
-  case 22:
-    return 7;
-  default:
-    return GPIO_WITHOUT_ADC_CHANNEL;
-  }
+  if ((gpio_pin >= 0) && (gpio_pin < LastGPIOPin))
+    return PinToAdc[gpio_pin];
+  else
+    return INVALID_CHANNEL;
 }

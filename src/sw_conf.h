@@ -18,7 +18,7 @@ typedef enum GPIO_PinAssignment
   ControlSource = 30,
   DirectionSelection = 31,
   LightsMain = 32,
-  PinFunction_Last=33
+  LastGPIOPin=33
 } GPIO_PinAssignment_t;
 
 #endif
