@@ -95,7 +95,6 @@ static GPIO_PinInfo_t gpioPinInfoStore[PIN_MAX] =
 // Function Prototypes
 //*****************************************************************************
 static void SetPortsToDefaultConfig();
-static bool PinOutOfBounce(uint8_t pin);
 
 //*****************************************************************************
 // Function Definitions
@@ -111,7 +110,7 @@ void GPIO_Init(GPIO_Port_t *portB_addr, GPIO_Port_t *portC_addr, GPIO_Port_t *po
 
 bool GPIO_GetPin(uint8_t gpioNumber)
 {
-  if (PinOutOfBounce(gpioNumber))
+  if (!GPIO_IsValidPin(gpioNumber))
     return false;
 
   GPIO_PinInfo_t gpioPin = gpioPinInfoStore[gpioNumber];
@@ -124,7 +123,7 @@ bool GPIO_GetPin(uint8_t gpioNumber)
 
 void GPIO_SetPin(uint8_t gpioNumber, bool state)
 {
-  if (PinOutOfBounce(gpioNumber))
+  if (!GPIO_IsValidPin(gpioNumber))
     return;
 
   GPIO_PinInfo_t gpioPin = gpioPinInfoStore[gpioNumber];
@@ -140,7 +139,7 @@ void GPIO_SetPin(uint8_t gpioNumber, bool state)
 
 void GPIO_ConfigurePin(uint8_t pinNumber, pinConfig_t config)
 {
-  if (PinOutOfBounce(pinNumber))
+  if (!GPIO_IsValidPin(pinNumber))
     return;
 
   GPIO_PinInfo_t gpioPin = gpioPinInfoStore[pinNumber];
@@ -167,12 +166,12 @@ void GPIO_ConfigurePin(uint8_t pinNumber, pinConfig_t config)
   }
 }
 
-static bool PinOutOfBounce(uint8_t pin)
+bool GPIO_IsValidPin(int8_t pin)
 {
-  if (pin >= PIN_MAX)
-    return true;
-  else
+  if ((pin < 0) || (pin >= PIN_MAX))
     return false;
+  else
+    return true;
 }
 
 static void SetPortsToDefaultConfig()

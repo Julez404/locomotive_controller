@@ -1,5 +1,6 @@
 #include "sw_conf.h"
 #include "../src/analog_reader.h"
+#include "gpio_driver.h"
 #include "mock_adc_driver.h"
 #include "../unity.framework/src/unity.h"
 
@@ -18,7 +19,7 @@ void test_ValueRequestIsRelayedToDriver()
   ADC_Init_Ignore();
   ADC_ActivateChannel_Ignore();
 
-  ADC_GetChannelReading_ExpectAndReturn(0,50);
+  ADC_GetChannelReading_ExpectAndReturn(0, 50);
   uint8_t reading = ANALOG_DRIVER_GetAnalogValue(Gas_Input);
   TEST_ASSERT_EQUAL(50, reading);
 }

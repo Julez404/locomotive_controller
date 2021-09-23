@@ -55,16 +55,16 @@ static int8_t PinToAdc[LastGPIOPin] =
         INVALID_CHANNEL, // 16
         INVALID_CHANNEL, // 17
         INVALID_CHANNEL, // 18
-        6,  // 19
+        6,               // 19
         INVALID_CHANNEL, // 20
         INVALID_CHANNEL, // 21
-        7,  // 22
-        0,  // 23
-        1,  // 24
-        2,  // 25
-        3,  // 26
-        4,  // 27
-        5,  // 28
+        7,               // 22
+        0,               // 23
+        1,               // 24
+        2,               // 25
+        3,               // 26
+        4,               // 27
+        5,               // 28
         INVALID_CHANNEL, // 29
         INVALID_CHANNEL, // 30
         INVALID_CHANNEL  // 31
@@ -101,7 +101,7 @@ int8_t ANALOG_DRIVER_GetAnalogValue(GPIO_PinAssignment_t gpio_pin)
 
 int8_t PinToAdcChannel(GPIO_PinAssignment_t gpio_pin)
 {
-  if ((gpio_pin >= 0) && (gpio_pin < LastGPIOPin))
+  if (GPIO_IsValidPin(gpio_pin))
     return PinToAdc[gpio_pin];
   else
     return INVALID_CHANNEL;

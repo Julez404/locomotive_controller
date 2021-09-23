@@ -12,6 +12,7 @@
 #include "stdint.h"
 #include "sw_conf.h"
 #include "adc_driver.h"
+#include "gpio_driver.h"
 #include <stddef.h>
 
 //*****************************************************************************

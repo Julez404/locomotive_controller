@@ -92,4 +92,11 @@ bool GPIO_GetPin(uint8_t gpioNumber);
  */
 void GPIO_SetPin(uint8_t gpioNumber, bool state);
 
+/**
+ * @brief Utility to check if a given pin is valid.
+ * Valid meaning the pin is in the valid range of available
+ * pin.
+ */
+bool GPIO_IsValidPin(int8_t pin);
+
 #endif
