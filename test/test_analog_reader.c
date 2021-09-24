@@ -1,11 +1,12 @@
 #include "sw_conf.h"
 #include "../src/analog_reader.h"
-#include "gpio_driver.h"
+#include "mock_gpio_driver.h"
 #include "mock_adc_driver.h"
 #include "../unity.framework/src/unity.h"
 
 void test_InitInitializesAdcDriver()
 {
+  GPIO_IsValidPin_IgnoreAndReturn(true);
   ADC_Init_Expect(NULL);
   ADC_ActivateChannel_Expect(0);
   ADC_ActivateChannel_Expect(1);
@@ -16,6 +17,7 @@ void test_InitInitializesAdcDriver()
 
 void test_ValueRequestIsRelayedToDriver()
 {
+  GPIO_IsValidPin_IgnoreAndReturn(true);
   ADC_Init_Ignore();
   ADC_ActivateChannel_Ignore();
 
@@ -24,8 +26,19 @@ void test_ValueRequestIsRelayedToDriver()
   TEST_ASSERT_EQUAL(50, reading);
 }
 
+void test_InvalidChannelRequestReturnError()
+{
+  GPIO_IsValidPin_IgnoreAndReturn(true);
+  ADC_Init_Ignore();
+  ADC_ActivateChannel_Ignore();
+
+  int8_t reading = ANALOG_DRIVER_GetAnalogValue(0);
+  TEST_ASSERT_EQUAL(ANALOG_READER_INVALID_CHANNEL_ERROR, reading);
+}
+
 void test_InvalidPinRequestReturnError()
 {
+  GPIO_IsValidPin_IgnoreAndReturn(false);
   ADC_Init_Ignore();
   ADC_ActivateChannel_Ignore();
 
