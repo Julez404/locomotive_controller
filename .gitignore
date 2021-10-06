@@ -3,3 +3,5 @@
 /lib/*
 .vscode
 /build/*
+src/avr/*
+doc/doxygen

@@ -69,11 +69,20 @@
 # You will need to have gcov and gcovr both installed to make it work.
 # For more information on these options, see docs in plugins/gcov
 :gcov:
+  :utilities:
+    - gcovr           # Use gcovr to create the specified reports (default).
   :reports:
+    - Text
     - HtmlDetailed
+    - cobertura
   :gcovr:
-    :html_medium_threshold: 75
-    :html_high_threshold: 90
+    :html_artifact_filename: index.html
+    :cobertura_artifact_filename: report_cobertura.xml
+#    :cobertura_pretty: true
+
+
+:junit_tests_report:
+  :artifact_filename: report_junit.xml
 
 #:tools:
 # Ceedling defaults to using gcc for compiling, linking, etc.
@@ -99,4 +108,6 @@
     - stdout_pretty_tests_report
     - module_generator
     - xml_tests_report
+    - gcov
+    - junit_tests_report
 ...

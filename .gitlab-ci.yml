@@ -1,0 +1,40 @@
+build:
+  stage: build
+  tags:
+    - bash
+  script:
+    - echo "Hello, $GITLAB_USER_LOGIN!"
+
+test:
+  before_script:
+    - docker info
+  stage: test
+  tags:
+    - bash
+  script:
+    - echo "Test ceedling project"
+    - docker run -v $(pwd):/project -i throwtheswitch/madsciencelab:latest ceedling test:all gcov:all utils:gcov
+  coverage: '/^TOTAL\s*[0-9]*\s*[0-9]*\s*([0-9]*)%/'
+  artifacts:
+    public: true
+    paths:
+      - build/artifacts/gcov/
+    expire_in: 1 week
+    reports:
+      cobertura: build/artifacts/gcov/report_cobertura.xml
+      junit: build/artifacts/test/report_junit.xml
+
+pages:
+  tags:
+    - bash
+  stage: deploy
+  dependencies:
+    - test
+  script:
+    - cp -r build/artifacts/gcov/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - dev
