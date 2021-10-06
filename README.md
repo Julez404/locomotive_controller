@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/Julez404/locomotive_controller/branch/master/graph/badge.svg?token=yKgU0BYDLM)](https://codecov.io/gh/Julez404/locomotive_controller)
+
 # Locomotive Controller
 
 Controller for a private model (1/8) locomotive.
