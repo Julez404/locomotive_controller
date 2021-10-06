@@ -25,4 +25,7 @@ jobs:
       uses: codecov/codecov-action@v1.5.0
       with:
         token: ${{ secrets.CODECOV_TOKEN}}
-        directory: build/artifacts/gcov/
+        directory: ./build/artifacts/gcov/
+        files: ./report_cobertura.xml
+        flags: unittests
+        
