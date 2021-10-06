@@ -21,3 +21,8 @@ jobs:
       with:
         name: ceedlingReport
         path: build
+    - name: Upload coverage Report
+      uses: codecov/codecov-action@v1.5.0
+      with:
+        token: ${{ secrets.CODECOV_TOKEN}}
+        directory: build/artifacts/gcov/
